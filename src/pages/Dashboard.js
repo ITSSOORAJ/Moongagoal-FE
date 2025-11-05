@@ -30,8 +30,8 @@ export default function Dashboard({ token }) {
     chimeAudio.current = new Audio(chimeSound);
   }, []);
 
-  const playClick = () => { try { clickAudio.current?.play(); } catch (err) {} };
-  const playChime = () => { try { chimeAudio.current?.play(); } catch (err) {} };
+  const playClick = () => { try { clickAudio.current?.play(); } catch {} };
+  const playChime = () => { try { chimeAudio.current?.play(); } catch {} };
 
   const fetchGoals = async (mode = 'today') => {
     try {
@@ -131,27 +131,27 @@ export default function Dashboard({ token }) {
   return (
     <div
       style={{
-        background:  'linear-gradient(135deg, #f178f5ff, #97eff4ff)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundAttachment: 'fixed',
-    minHeight: '100vh',
-    padding: '50px 0',
-    fontFamily: "'Poppins', sans-serif",
+        background: 'linear-gradient(135deg, #f178f5ff, #97eff4ff)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        minHeight: '100vh',
+        padding: '50px 0',
+        fontFamily: "'Poppins', sans-serif",
       }}
     >
-      <div className="container" style={{ maxWidth: 1150 }}>
-        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+      <div className="container">
+        <div className="responsive-grid">
 
           {/* SECTION 1 - Add + View Goals */}
-          <div style={{ flex: 1, minWidth: 380 }}>
+          <div className="section">
             <div className="card pretty-card">
               <h2 style={{ color: '#d63384' }}>🎯 Manage Your Goals</h2>
               <AddGoalForm onCreate={handleCreate} />
 
               <div className="view-switch" style={{ marginTop: 20 }}>
                 <h4 style={{ color: '#c767a7', marginBottom: 10 }}>📅 View Goals</h4>
-                <div style={{ display: 'flex', gap: 10 }}>
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                   {['today', 'previous', 'all'].map((m) => (
                     <button
                       key={m}
@@ -174,11 +174,11 @@ export default function Dashboard({ token }) {
             </div>
           </div>
 
-          {/* SECTION 2 - Dashboard, Summary & Chart */}
-          <div style={{ flex: 1, minWidth: 380 }}>
+          {/* SECTION 2 - Dashboard Summary & Chart */}
+          <div className="section">
             <div className="card pretty-card">
               <h3 style={{ color: '#a64ca6' }}>💖 Dashboard Summary</h3>
-              <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
+              <div className="pill-row">
                 <div className="pill">Completed: {summary.completed}</div>
                 <div className="pill">Total Today: {summary.total}</div>
               </div>
@@ -187,36 +187,27 @@ export default function Dashboard({ token }) {
                   🌷 Keep going! Hover over the chart points to see your daily progress.
                 </div>
               </div>
-             <div
-  style={{
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 25,
-  }}
->
-  {/* Sticky Notes Button */}
-  <button
-    className="cute-btn"
-    style={{
-      background: 'linear-gradient(135deg, #b86bba, #e2a9e5)',
-      boxShadow: '0 4px 10px rgba(184, 107, 186, 0.3)',
-    }}
-    onClick={() => (window.location.href = '/notes')}
-  >
-    🗒️ Sticky Notes
-  </button>
 
-  {/* End of Day Button */}
-  <button className="cute-btn" onClick={handleEOD}>
-    🌙 End of Day
-  </button>
-</div>
+              <div className="button-row">
+                <button
+                  className="cute-btn"
+                  style={{
+                    background: 'linear-gradient(135deg, #b86bba, #e2a9e5)',
+                    boxShadow: '0 4px 10px rgba(184, 107, 186, 0.3)',
+                  }}
+                  onClick={() => (window.location.href = '/notes')}
+                >
+                  🗒️ Sticky Notes
+                </button>
 
+                <button className="cute-btn" onClick={handleEOD}>
+                  🌙 End of Day
+                </button>
+              </div>
             </div>
 
             {/* Chart Section */}
-            <div style={{ marginTop: 20 }} className="card pretty-card">
+            <div className="card pretty-card" style={{ marginTop: 20 }}>
               <h3 style={{ color: '#a64ca6' }}>📈 Progress Overview</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
@@ -266,6 +257,24 @@ export default function Dashboard({ token }) {
       />
 
       <style jsx>{`
+        .container {
+          width: 95%;
+          max-width: 1150px;
+          margin: auto;
+          padding: 0 10px;
+        }
+
+        .responsive-grid {
+          display: flex;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+
+        .section {
+          flex: 1;
+          min-width: 350px;
+        }
+
         .pretty-card {
           background: #fff;
           border-radius: 20px;
@@ -273,10 +282,12 @@ export default function Dashboard({ token }) {
           padding: 20px;
           transition: all 0.3s ease;
         }
+
         .pretty-card:hover {
           transform: scale(1.02);
           box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4);
         }
+
         .cute-btn {
           background: linear-gradient(135deg, #f78fb3, #fbc2eb);
           border: none;
@@ -287,20 +298,71 @@ export default function Dashboard({ token }) {
           font-weight: 600;
           transition: all 0.3s;
         }
+
         .cute-btn:hover {
           transform: scale(1.05);
           box-shadow: 0 4px 10px rgba(255, 105, 180, 0.3);
         }
+
         .cute-btn.active {
           background: linear-gradient(135deg, #b86bba, #e2a9e5);
           box-shadow: 0 4px 12px rgba(184, 107, 186, 0.4);
         }
+
         .pill {
           background: #ffe4ec;
           color: #d63384;
           border-radius: 20px;
           padding: 6px 14px;
           font-weight: 600;
+        }
+
+        .pill-row {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-top: 10px;
+        }
+
+        .button-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+          margin-top: 25px;
+          flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+          .responsive-grid {
+            flex-direction: column;
+          }
+          .section {
+            min-width: 100%;
+          }
+          .cute-btn {
+            width: 100%;
+          }
+          .button-row {
+            flex-direction: column;
+          }
+          h2, h3, h4 {
+            text-align: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .pretty-card {
+            padding: 15px;
+          }
+          .cute-btn {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+          }
+          .pill {
+            font-size: 0.9rem;
+            padding: 4px 10px;
+          }
         }
       `}</style>
     </div>
