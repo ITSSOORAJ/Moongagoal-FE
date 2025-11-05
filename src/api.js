@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api'; // ⚙️ Change if deployed (e.g., backend URL)
+const API_URL = 'https://moongagoal-be.onrender.com/api'; // ⚙️ Change if deployed (e.g., backend URL)
 
 const instance = axios.create({
   baseURL: API_URL,
@@ -43,3 +43,4 @@ const api = {
 };
 
 export default api;
+
